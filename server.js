@@ -9,9 +9,9 @@ var file = new _static.Server('./', {
 });
 
 var options = {
-  key: fs.readFileSync('sslcert/server.key'),
-  cert: fs.readFileSync('sslcert/server.crt'),
-  ca: fs.readFileSync('sslcert/ca.crt'),
+  key: fs.readFileSync('sslcert/key.pem'),
+  cert: fs.readFileSync('sslcert/cert.pem'),
+  ca: fs.readFileSync('sslcert/cert.pem'),
   requestCert: true,
   rejectUnauthorized: false
 };
