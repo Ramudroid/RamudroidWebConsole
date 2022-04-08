@@ -1,7 +1,8 @@
 // Scripts to communicate the webservices to backend rapsberry Pi CPU over flask framework
 // added cors realted headers 
 
-var rpiip = "192.168.15.193:5000";
+var rpi_ip = option.rpi_controller_ip;
+var web_server = option.web_server;
 
 function togglebtn(item){
     console.log("togglebtn item -" , item);
@@ -32,11 +33,11 @@ async function operation(move_var){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
-    headers.append('Access-Control-Allow-Origin', 'http://127.0.0.1:8084');
+    headers.append('Access-Control-Allow-Origin', 'http://'+web_server+'');
     headers.append('Access-Control-Allow-Credentials', 'true');
     headers.append('GET', 'POST', 'OPTIONS');
 
-    const response = await fetch('https://'+rpiip+"/move/"+move_var,{
+    const response = await fetch('https://'+rpi_ip+"/move/"+move_var,{
       mode: 'no-cors',
       method: 'GET',
       headers: headers

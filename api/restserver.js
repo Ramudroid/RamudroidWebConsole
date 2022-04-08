@@ -3,7 +3,8 @@ var restify = require('restify');
 var http    = require("http");
 var fs = require('fs');
 
-
+var globals = require('./../property.js');
+var serverip = globals.serverip;
 var pin1 = "0";
 var pin2 = "0";
 var pin3 = "0";
@@ -35,11 +36,11 @@ function getMoveLeft(req, res, next) {
     pin6="0";
     pin7="0";
     pin8="0";
-    res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+    res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
 
     res.send({
       msg: "moved left ",
-      sendCoammnd :"http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8});
+      sendCoammnd :"http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8});
     return;
 }
 
@@ -64,7 +65,7 @@ function getMoveRight(req, res, callback) {
       pin7="0";
       pin8="0";
 //   res.send(send(pin1,pin2,pin3,pin4,pin4,pin5,pin6,pin7,pin8));
-      res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+      res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
 
     return;
 }
@@ -89,7 +90,7 @@ function getMoveFront(req, res, callback) {
     pin6="0";
     pin7="0";
     pin8="0";
-    res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+    res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
     return;
 }
 
@@ -114,7 +115,7 @@ function getMoveBack(req, res, callback) {
     pin6="0";
     pin7="0";
     pin8="0";
-    res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+    res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
     /*  
     res.json({ 
         type: true, 
@@ -145,7 +146,7 @@ function getMoveStop(req, res, callback) {
     pin7="0";
     pin8="0";
 
-    res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+    res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
 
     return;
 } 
@@ -163,7 +164,7 @@ function getMoveStop(req, res, callback) {
  */
 function getCleanBrushes(req, res, callback) { 
     pin5="1";
-    res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+    res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
     return;
 } 
 
@@ -182,7 +183,7 @@ function getCleanTray(req, res, callback) {
     pin6="1";
     pin7="0";
 
-    res.redirect("http://192.168.0.168/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
+    res.redirect("http://"+serverip+"/m2m/rpiramudroid/testgpio.php?p0="+pin1+"&p1=" + pin2 + "&p2=" + pin3 + "&p3=" + pin4+ "&p4=" + pin5+ "&p5=" + pin6+ "&p6=" + pin7+ "&p7=" + pin8, callback);
 
     return;
 } 
