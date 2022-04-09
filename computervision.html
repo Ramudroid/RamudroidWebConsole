@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ramudroid</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+</head>
+<body>
+<h2>Garbage Identification and Classification Neural Network model for Ramudroid</h2>
+
+<table>
+    <td>
+        <input type='file'/>
+        <video controls height="500px" id="sample_video"></video>
+        <canvas id="sample_canvas"></canvas>
+    </td>
+    <td>
+        <h3> catagory :
+            <div id="catagory"></div>
+        </h3>
+
+        <div id="label-container"></div>
+    </td>
+</table>
+
+<script type="text/javascript">
+    // document.addEventListener('DOMContentLoaded', function(){
+    window.addEventListener('load', function () {
+        var canvas = document.getElementById('sample_canvas');
+        var context = canvas.getContext('2d');
+        var cw = Math.floor(canvas.clientWidth / 100);
+        var ch = Math.floor(canvas.clientHeight / 100);
+        canvas.width = cw;
+        canvas.height = ch;
+
+        document.querySelector('input[type="file"]').addEventListener('change', function () {
+
+            var video = document.getElementById('sample_video');
+            if (this.files && this.files[0]) {
+                var URL = window.URL || window.webkitURL
+                video.src = URL.createObjectURL(this.files[0]); // set src to blob url
+            }
+            video.addEventListener('play', function () {
+                draw(this, context, cw, ch);
+                predict();
+            }, false);
+            video.play();
+        });
+    });
+
+
+    function draw(v, c, w, h) {
+        if (v.paused || v.ended) return false;
+        c.drawImage(v, 0, 0, w, h);
+        predict();
+        setTimeout(draw, 20, v, c, w, h);
+    }
+
+
+    // the link to your model provided by Teachable Machine export panel
+    const URL = "./Model_Litter_Identification_classification/";
+
+    let model, labelContainer, maxPredictions;
+
+    // load the model and metadata
+    async function loadmodel() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+        model = await tmImage.load(modelURL, metadataURL);
+    }
+
+    (async () => {
+        await loadmodel();
+        maxPredictions = model.getTotalClasses();
+
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) {
+            labelContainer.appendChild(document.createElement("div"));
+        }
+    })();
+
+    var catagorytxt = document.getElementById('catagory');
+
+    async function predict() {
+
+        // predict can take in an image, video or canvas html element
+        const prediction = await model.predict(sample_canvas);
+        console.log(" prediction => ", prediction);
+
+        for (let i = 0; i < maxPredictions; i++) {
+            var cls = prediction[i].className;
+            var catagory = cls.substr(1, 2);
+            switch (catagory) {
+                case "O":
+                    catagorytxt.innerHTML = "Organic Waste";
+                    break;
+                case "R":
+                    catagorytxt.innerHTML = "Recyclable Waste";
+                    break;
+                case "N":
+                    catagorytxt.innerHTML = "Non-Recyclable Waste";
+                    break;
+                case "M":
+                    catagorytxt.innerHTML = "Medical Waste";
+                    break;
+                case "E":
+                    catagorytxt.innerHTML = "Electronic Waste";
+                    break;
+                default:
+            }
+
+            var val = prediction[i].probability.toFixed(2);
+
+            console.log("prediction.className ", cls);
+            const classPrediction = cls + ": " + val;
+            labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+    }
+</script>
+
+</body>
+</html>
