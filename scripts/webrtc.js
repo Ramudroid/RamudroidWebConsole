@@ -53,9 +53,11 @@ var datachannel, localdatachannel;
 var audio_video_stream;
 var recorder = null;
 var recordedBlobs;
-var pcConfig = {"iceServers": [
+var pcConfig = {
+    "iceServers": [
         {"urls": ["stun:stun.l.google.com:19302", "stun:" + signalling_server_hostname + ":3478"]}
-    ]};
+    ]
+};
 var pcOptions = {
     optional: [
         // Deprecated:
@@ -91,8 +93,8 @@ function createPeerConnection() {
             }
         } catch (e) {
             alert(e + "\nExample: "
-                    + '\n[ {"urls": "stun:stun1.example.net"}, {"urls": "turn:turn.example.org", "username": "user", "credential": "myPassword"} ]'
-                    + "\nContinuing with built-in RTCIceServer array");
+                + '\n[ {"urls": "stun:stun1.example.net"}, {"urls": "turn:turn.example.org", "username": "user", "credential": "myPassword"} ]'
+                + "\nContinuing with built-in RTCIceServer array");
         }
         console.log(JSON.stringify(pcConfig_));
         pc = new RTCPeerConnection(pcConfig_, pcOptions);
@@ -241,29 +243,35 @@ function start() {
                 localConstraints['video'] = true;
             } else if (cast_screen) {
                 if (isFirefox) {
-                    localConstraints['video'] = {frameRate: {ideal: 30, max: 30},
+                    localConstraints['video'] = {
+                        frameRate: {ideal: 30, max: 30},
                         //width: {min: 640, max: 960},
                         //height: {min: 480, max: 720},
                         mozMediaSource: "screen",
-                        mediaSource: "screen"};
+                        mediaSource: "screen"
+                    };
                 } else {
                     // chrome://flags#enable-usermedia-screen-capturing
                     document.getElementById("cast_mic").checked = false;
                     localConstraints['audio'] = false; // mandatory for chrome
-                    localConstraints['video'] = {'mandatory': {'chromeMediaSource':'screen'}};
+                    localConstraints['video'] = {'mandatory': {'chromeMediaSource': 'screen'}};
                 }
             } else if (cast_window)
-                localConstraints['video'] = {frameRate: {ideal: 30, max: 30},
+                localConstraints['video'] = {
+                    frameRate: {ideal: 30, max: 30},
                     //width: {min: 640, max: 960},
                     //height: {min: 480, max: 720},
                     mozMediaSource: "window",
-                    mediaSource: "window"};
+                    mediaSource: "window"
+                };
             else if (cast_application)
-                localConstraints['video'] = {frameRate: {ideal: 30, max: 30},
+                localConstraints['video'] = {
+                    frameRate: {ideal: 30, max: 30},
                     //width: {min: 640, max: 960},
                     //height:  {min: 480, max: 720},
                     mozMediaSource: "application",
-                    mediaSource: "application"};
+                    mediaSource: "application"
+                };
             else
                 localConstraints['video'] = false;
 
@@ -301,28 +309,28 @@ function start() {
             switch (what) {
                 case "offer":
                     pc.setRemoteDescription(new RTCSessionDescription(JSON.parse(data)),
-                            function onRemoteSdpSuccess() {
-                                remoteDesc = true;
-                                addIceCandidates();
-                                console.log('onRemoteSdpSucces()');
-                                pc.createAnswer(function (sessionDescription) {
-                                    pc.setLocalDescription(sessionDescription);
-                                    var request = {
-                                        what: "answer",
-                                        data: JSON.stringify(sessionDescription)
-                                    };
-                                    ws.send(JSON.stringify(request));
-                                    console.log(request);
+                        function onRemoteSdpSuccess() {
+                            remoteDesc = true;
+                            addIceCandidates();
+                            console.log('onRemoteSdpSucces()');
+                            pc.createAnswer(function (sessionDescription) {
+                                pc.setLocalDescription(sessionDescription);
+                                var request = {
+                                    what: "answer",
+                                    data: JSON.stringify(sessionDescription)
+                                };
+                                ws.send(JSON.stringify(request));
+                                console.log(request);
 
-                                }, function (error) {
-                                    alert("Failed to createAnswer: " + error);
+                            }, function (error) {
+                                alert("Failed to createAnswer: " + error);
 
-                                }, mediaConstraints);
-                            },
-                            function onRemoteSdpError(event) {
-                                alert('Failed to set remote description (unsupported codec on this browser?): ' + event);
-                                stop();
-                            }
+                            }, mediaConstraints);
+                        },
+                        function onRemoteSdpError(event) {
+                            alert('Failed to set remote description (unsupported codec on this browser?): ' + event);
+                            stop();
+                        }
                     );
 
                     /*
@@ -359,7 +367,10 @@ function start() {
                     var candidates = JSON.parse(msg.data);
                     for (var i = 0; candidates && i < candidates.length; i++) {
                         var elt = candidates[i];
-                        let candidate = new RTCIceCandidate({sdpMLineIndex: elt.sdpMLineIndex, candidate: elt.candidate});
+                        let candidate = new RTCIceCandidate({
+                            sdpMLineIndex: elt.sdpMLineIndex,
+                            candidate: elt.candidate
+                        });
                         iceCandidates.push(candidate);
                     }
                     if (remoteDesc)
@@ -432,6 +443,10 @@ function stop() {
     document.documentElement.style.cursor = 'default';
 }
 
+
+
+
+// mute the audio from the webrftc stream
 function mute() {
     var remoteVideo = document.getElementById("remote-video");
     remoteVideo.muted = !remoteVideo.muted;
@@ -701,7 +716,7 @@ function create_localdatachannel() {
     if (pc && localdatachannel)
         return;
     localdatachannel = pc.createDataChannel('datachannel');
-    localdatachannel.onopen = function(event) {
+    localdatachannel.onopen = function (event) {
         if (localdatachannel.readyState === "open") {
             localdatachannel.send("datachannel created!");
         }
@@ -733,7 +748,7 @@ function handleOrientation(event) {
 function isGyronormPresent() {
     var url = "gyronorm.complete.min.js";
     var scripts = document.getElementsByTagName('script');
-    for (var i = scripts.length; i--; ) {
+    for (var i = scripts.length; i--;) {
         if (scripts[i].src.indexOf(url) > -1)
             return true;
     }
@@ -804,7 +819,7 @@ function orientationsend_selection() {
 }
 
 function getKeycodesArray(arr) {
-    var newArr = new Array();
+    var newArr = [];
     for (var i = 0; i < arr.length; i++) {
         if (typeof arr[i] == "number") {
             newArr[newArr.length] = arr[i];
@@ -906,7 +921,7 @@ function convertKeycodes(arr) {
         /*4 left-arrow*/ 100: 75,
         /*5*/ 101: 76,
         /*6 right-arrow*/ 102: 77,
-        /*7 Home*/ 	103: 71,
+        /*7 Home*/    103: 71,
         /*8 up-arrow*/ 104: 72,
         /*9 Pg Up*/ 105: 73,
         /*+*/ 107: 78,
@@ -996,7 +1011,7 @@ function toKeyCode() {
         datachannel.send(JSON.stringify(keycodes));
     }
 }
-;
+
 
 function keydown(e) {
     if (e.keyCode == 0 || e.keyCode == 229) { // on mobile
@@ -1018,7 +1033,7 @@ function keydown(e) {
         datachannel.send(JSON.stringify(keycodes));
     }
 }
-;
+
 
 function keyup(e) {
     if (e.keyCode == 0 || e.keyCode == 229) { // on mobile
@@ -1030,7 +1045,7 @@ function keyup(e) {
     e.stopImmediatePropagation();
     keys[e.keyCode] = false;
 }
-;
+
 
 function keypresssend_selection() {
     if (document.getElementById('keypresssend').checked) {
@@ -1065,7 +1080,8 @@ window.onload = function () {
 
 window.onbeforeunload = function () {
     if (ws) {
-        ws.onclose = function () {}; // disable onclose handler first
+        ws.onclose = function () {
+        }; // disable onclose handler first
         stop();
     }
 };

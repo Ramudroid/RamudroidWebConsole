@@ -5,8 +5,8 @@ var ctx = canvas.getContext('2d');
 window.URL = window.URL || window.webkitURL;
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
 var rAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || function (func) {
-        setTimeout(func, 1000 / 60);
-    };
+    setTimeout(func, 1000 / 60);
+};
 
 var w = canvas.width,
     h = canvas.height;
@@ -30,7 +30,7 @@ function render() {
     var blended = getBlendedFrame();
     ctx.putImageData(blended, 0, 0);
     rAF(render);
-};
+}
 
 function getBlendedFrame() {
     var result = ctx.createImageData(w, h),
@@ -51,11 +51,12 @@ function getBlendedFrame() {
     lastFrame = currentFrame;
 
     return result;
-};
+}
 
 navigator.getUserMedia({
     video: true
 }, function (stream) {
     video.src = URL.createObjectURL(stream);
     video.addEventListener('loadedmetadata', init, false);
-}, function(){});
+}, function () {
+});

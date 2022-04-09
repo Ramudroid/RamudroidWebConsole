@@ -54,7 +54,7 @@
         if (v.paused || v.ended) return false;
         c.drawImage(v, 0, 0, w, h);
         predict();
-        setTimeout(draw, 20, v, c, w, h);
+        setTimeout(draw, 30, v, c, w, h);
     }
 
 
@@ -86,35 +86,56 @@
 
         // predict can take in an image, video or canvas html element
         const prediction = await model.predict(sample_canvas);
-        console.log(" prediction => ", prediction);
+        // console.log(" prediction => ", prediction);
+        var clspred = {};
 
         for (let i = 0; i < maxPredictions; i++) {
-            var cls = prediction[i].className;
-            var catagory = cls.substr(1, 2);
-            switch (catagory) {
-                case "O":
-                    catagorytxt.innerHTML = "Organic Waste";
-                    break;
-                case "R":
-                    catagorytxt.innerHTML = "Recyclable Waste";
-                    break;
-                case "N":
-                    catagorytxt.innerHTML = "Non-Recyclable Waste";
-                    break;
-                case "M":
-                    catagorytxt.innerHTML = "Medical Waste";
-                    break;
-                case "E":
-                    catagorytxt.innerHTML = "Electronic Waste";
-                    break;
-                default:
-            }
+            var c= prediction[i].className;
+            if(!clspred.hasOwnProperty(c))
+                clspred[c]=0;
 
             var val = prediction[i].probability.toFixed(2);
+            clspred[c].name=c;
+            clspred[c].val=val;
 
-            console.log("prediction.className ", cls);
-            const classPrediction = cls + ": " + val;
+            //showMaxCatagory(clspred);
+            // console.log("prediction.className ", cls);
+            const classPrediction = c + ": " + val;
             labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+
+    }
+
+    function showMaxCatagory(clspred){
+        var maxpred=0;
+        var maxcls="O";
+        for( var obj in clspred){
+            let maxpred_before=maxpred;
+            maxpred = Math.max(maxpred, obj.val);
+
+            if(maxpred > maxpred_before)
+                maxcls = obj;
+        }
+
+        var catagory = maxcls.substr(0, 1);
+        switch (catagory) {
+            case "O":
+                catagorytxt.innerHTML = "Organic Waste";
+                break;
+            case "R":
+                catagorytxt.innerHTML = "Recyclable Waste";
+                break;
+            case "N":
+                catagorytxt.innerHTML = "Non-Recyclable Waste";
+                break;
+            case "M":
+                catagorytxt.innerHTML = "Medical Waste";
+                break;
+            case "E":
+                catagorytxt.innerHTML = "Electronic Waste";
+                break;
+            default:
+                break;
         }
     }
 </script>
